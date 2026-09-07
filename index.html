@@ -1,0 +1,1444 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#EAEBE4">
+<title>Filo — il filo del discorso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --carta:#EAEBE4;
+  --carta-alta:#F4F5EF;
+  --inchiostro:#1B241E;
+  --tenue:#5C6659;
+  --filo:#AE8B3D;
+  --filo-chiaro:#D9C48A;
+  --nastro:#8C2F39;
+  --bordo:#D2D4C7;
+  --ombra:0 1px 0 rgba(27,36,30,.06);
+  --serif:'Literata',Georgia,'Times New Roman',serif;
+  --sans:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--carta);color:var(--inchiostro);
+  font:400 17px/1.55 var(--serif);
+  -webkit-text-size-adjust:100%;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom));
+}
+button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none;padding:0}
+a{color:var(--nastro)}
+:focus-visible{outline:2px solid var(--filo);outline-offset:2px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- struttura ---------- */
+.schermo{max-width:720px;margin:0 auto;padding:0 16px}
+.testata{
+  position:sticky;top:0;z-index:20;background:var(--carta);
+  border-bottom:1px solid var(--bordo);
+  padding-top:env(safe-area-inset-top);
+}
+.testata-in{max-width:720px;margin:0 auto;padding:12px 16px 11px;display:flex;gap:12px;align-items:flex-start}
+.testata h1{margin:0;font:600 21px/1.2 var(--serif);letter-spacing:-.01em}
+.testata .sotto{font:400 13px/1.4 var(--sans);color:var(--tenue);margin-top:3px}
+.indietro{font:500 14px/1 var(--sans);color:var(--tenue);padding:8px 10px 8px 0;margin:-6px 0}
+.azioni-testata{margin-left:auto;display:flex;gap:6px;flex:none}
+.icona{
+  width:38px;height:38px;border-radius:10px;border:1px solid var(--bordo);
+  background:var(--carta-alta);display:grid;place-items:center;
+  font:500 15px/1 var(--sans);color:var(--tenue);
+}
+.icona.attiva{border-color:var(--filo);color:var(--filo);background:#fff}
+
+/* ---------- barra di navigazione ---------- */
+.barra{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  background:var(--carta-alta);border-top:1px solid var(--bordo);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.barra-in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.barra button{
+  padding:13px 6px 15px;font:500 13px/1.2 var(--sans);color:var(--tenue);
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  border-top:2px solid transparent;margin-top:-1px;
+}
+.barra button .g{font-size:17px;line-height:1;font-family:var(--serif)}
+.barra button[aria-current="true"]{color:var(--inchiostro);border-top-color:var(--filo)}
+
+/* ---------- archivio ---------- */
+.masthead{padding:34px 0 26px;border-bottom:1px solid var(--bordo);margin-bottom:8px}
+.masthead h1{
+  margin:0;font:700 40px/.95 var(--serif);letter-spacing:-.03em;
+}
+.masthead h1 em{font-style:italic;font-weight:400;color:var(--filo)}
+.masthead p{margin:10px 0 0;font:400 15px/1.5 var(--sans);color:var(--tenue);max-width:34ch}
+.scheda{
+  display:block;width:100%;text-align:left;
+  padding:16px 0;border-bottom:1px solid var(--bordo);
+}
+.scheda h2{margin:0;font:600 20px/1.25 var(--serif)}
+.scheda .meta{margin-top:5px;font:400 13px/1.4 var(--sans);color:var(--tenue)}
+.scheda .passo{color:var(--nastro)}
+.vuoto{
+  margin:26px 0;padding:22px;border:1px dashed var(--bordo);border-radius:14px;
+  background:var(--carta-alta);
+}
+.vuoto p{margin:0 0 14px;font:400 16px/1.5 var(--serif);color:var(--tenue)}
+
+/* ---------- pulsanti ---------- */
+.btn{
+  font:500 15px/1 var(--sans);padding:13px 18px;border-radius:11px;
+  background:var(--inchiostro);color:var(--carta-alta);display:inline-flex;
+  align-items:center;gap:8px;
+}
+.btn.chiaro{background:var(--carta-alta);color:var(--inchiostro);border:1px solid var(--bordo)}
+.btn.oro{background:var(--filo);color:#fff}
+.btn.pieno{width:100%;justify-content:center}
+.btn:active{transform:translateY(1px)}
+.minuto{font:500 13px/1 var(--sans);color:var(--tenue);padding:9px 11px;border-radius:9px;border:1px solid var(--bordo);background:var(--carta-alta)}
+.minuto.rosso{color:var(--nastro);border-color:#E0CBCD}
+
+/* ---------- intestazione predica ---------- */
+.intestazione{padding:18px 0 6px}
+.campo-titolo{
+  width:100%;border:none;background:none;padding:0;display:block;
+  font:700 27px/1.2 var(--serif);letter-spacing:-.02em;
+  resize:none;overflow:hidden;
+}
+.campo-titolo::placeholder{color:#A8AE9F}
+.riga-meta{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.campo-meta{
+  flex:1 1 150px;min-width:0;border:1px solid var(--bordo);background:var(--carta-alta);
+  border-radius:10px;padding:9px 11px;font:400 14px/1.3 var(--sans);
+}
+.campo-meta::placeholder{color:#9AA192}
+
+/* ---------- striscia colpo d'occhio ---------- */
+.striscia{
+  display:flex;gap:8px;overflow-x:auto;padding:14px 16px;margin:0 -16px;
+  scrollbar-width:none;
+}
+.striscia::-webkit-scrollbar{display:none}
+.pastiglia{
+  flex:none;display:flex;align-items:center;gap:7px;max-width:190px;
+  border:1px solid var(--bordo);background:var(--carta-alta);border-radius:999px;
+  padding:7px 13px 7px 8px;font:400 13.5px/1.2 var(--sans);color:var(--tenue);
+}
+.pastiglia b{
+  width:20px;height:20px;border-radius:50%;background:var(--filo);color:#fff;
+  display:grid;place-items:center;font:600 11.5px/1 var(--sans);flex:none;
+}
+.pastiglia span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pastiglia.muto b{background:var(--bordo);color:var(--tenue)}
+
+/* ---------- il filo ---------- */
+.punti{padding:4px 0 30px}
+.punto{position:relative;padding:0 0 26px 42px}
+.punto::before{
+  content:'';position:absolute;left:13px;top:6px;bottom:0;width:1.5px;
+  background:linear-gradient(var(--filo-chiaro),var(--filo-chiaro));
+}
+.punto:last-child::before{bottom:auto;height:26px}
+.segno{
+  position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;
+  background:var(--filo);color:#fff;display:grid;place-items:center;
+  font:600 14px/1 var(--sans);
+}
+.titolo-punto{
+  width:100%;border:none;background:none;padding:2px 0 6px;display:block;
+  font:600 20px/1.3 var(--serif);resize:none;overflow:hidden;
+}
+.titolo-punto::placeholder{color:#A8AE9F;font-weight:400;font-style:italic}
+
+.blocco{margin:10px 0}
+.nota{
+  width:100%;border:1px solid transparent;border-left:2px solid var(--bordo);
+  background:none;border-radius:0;padding:2px 0 2px 12px;resize:none;overflow:hidden;
+  font:400 16.5px/1.6 var(--serif);min-height:30px;display:block;
+}
+.nota:focus{border-left-color:var(--filo);outline:none}
+.nota::placeholder{color:#A8AE9F;font-style:italic}
+.nota-letta{border-left:2px solid var(--bordo);padding:1px 0 1px 12px;font:400 16.5px/1.6 var(--serif)}
+.nota-letta p{margin:0 0 .5em}
+.nota-letta p:last-child{margin-bottom:0}
+.nota-letta ul{list-style:none;margin:.15em 0 .5em;padding:0}
+.nota-letta li{position:relative;padding-left:16px;margin:0 0 .3em}
+.nota-letta li::before{content:'';position:absolute;left:2px;top:.68em;width:5px;height:5px;border-radius:50%;background:var(--filo)}
+.nota-letta .forte{font-weight:700}
+.nota-letta .vuota{color:#A8AE9F;font-style:italic}
+.nota-letta a{color:var(--nastro);word-break:break-word}
+.riga-tocco{display:flex;justify-content:flex-end;gap:6px;margin-top:3px}
+.tocco{font:500 12.5px/1 var(--sans);color:var(--tenue);padding:8px 12px;border-radius:8px;
+  border:1px solid var(--bordo);background:var(--carta-alta)}
+.tocco:active{background:#E4E6DC}
+.tocco.rosso{color:var(--nastro)}
+.link-rilevati{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0 14px}
+.chip-link{
+  font:500 12.5px/1 var(--sans);color:var(--nastro);border:1px solid #E0CBCD;
+  border-radius:999px;padding:6px 10px;background:#FBF6F6;text-decoration:none;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+.versetto{
+  border:1px solid var(--bordo);border-radius:12px;background:var(--carta-alta);
+  padding:12px 14px;
+}
+.versetto .rif{
+  font:600 15.5px/1.35 var(--sans);color:var(--nastro);text-decoration:none;
+  border-bottom:1.5px solid #DFC3C6;padding-bottom:1px;
+}
+.versetto .rif.spento{color:var(--tenue);border-bottom-color:var(--bordo)}
+.versetto .riga{display:flex;align-items:flex-start;gap:10px}
+.versetto .riga .cresci{flex:1;min-width:0}
+.versetto .corpo{
+  margin-top:9px;font:400 15.5px/1.6 var(--serif);color:#3A4438;
+  max-height:5.2em;overflow:hidden;position:relative;
+}
+.versetto .corpo.aperto{max-height:none}
+.versetto .corpo.chiuso::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:2em;
+  background:linear-gradient(rgba(244,245,239,0),var(--carta-alta));
+}
+.versetto textarea{
+  width:100%;border:1px solid var(--bordo);border-radius:9px;padding:10px;
+  background:#fff;font:400 15px/1.5 var(--serif);resize:none;overflow:hidden;min-height:96px;
+}
+.versetto .aiuto{margin:8px 0 0;font:400 12.5px/1.45 var(--sans);color:var(--tenue)}
+
+.aggiungi{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.piede-punto{display:flex;gap:6px;margin-top:12px;opacity:.8}
+
+/* ---------- scaletta ---------- */
+.voce{display:flex;align-items:flex-start;gap:10px;margin:9px 0}
+.voce .puntino{
+  width:6px;height:6px;border-radius:50%;background:var(--filo);
+  margin:11px 0 0;flex:none;
+}
+.voce.vers .puntino{background:var(--nastro)}
+.voce input{
+  flex:1;min-width:0;border:none;background:none;padding:3px 0;
+  font:400 18px/1.45 var(--serif);
+}
+.voce.vers input{color:var(--nastro);font-weight:600}
+.voce .togli{color:#A8AE9F;font:400 20px/1 var(--sans);padding:4px 6px;flex:none}
+.voce-letta{display:flex;align-items:flex-start;gap:10px;margin:9px 0;font:400 18px/1.45 var(--serif)}
+.voce-letta.vers{color:var(--nastro);font-weight:600}
+.voce-letta a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(140,47,57,.35)}
+.voce-letta .vuota{color:#A8AE9F;font-style:italic;font-size:15px}
+.barra-scaletta{
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  padding:14px 0;border-bottom:1px solid var(--bordo);
+}
+.nota-punto-scaletta{margin:0 0 2px;font:400 13px/1.4 var(--sans);color:var(--tenue)}
+
+/* ---------- predica ---------- */
+.pulpito{
+  position:fixed;inset:0;z-index:60;background:#141C17;color:#EDEDE4;
+  display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+.pulpito .alto{
+  display:flex;align-items:center;gap:12px;padding:12px 18px;
+  border-bottom:1px solid rgba(217,196,138,.22);
+}
+.pulpito .conta{font:600 13px/1 var(--sans);color:#D9C48A;letter-spacing:.02em}
+.pulpito .orolo{margin-left:auto;font:500 13px/1 var(--sans);color:#8C9789}
+.pulpito .esci{font:500 13px/1 var(--sans);color:#8C9789;padding:6px 0 6px 10px}
+.pulpito .foglio{flex:1;overflow-y:auto;padding:26px 20px 20px;-webkit-overflow-scrolling:touch}
+.pulpito h2{
+  margin:0 0 4px;font:700 30px/1.18 var(--serif);letter-spacing:-.02em;color:#F3F3EA;
+}
+.pulpito .numero{font:600 13px/1 var(--sans);color:#D9C48A;margin-bottom:12px;display:block}
+.pulpito ul{list-style:none;margin:22px 0 0;padding:0}
+.pulpito li{
+  font:400 25px/1.4 var(--serif);margin:0 0 18px;padding-left:20px;position:relative;
+}
+.pulpito li::before{
+  content:'';position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;
+  background:#D9C48A;
+}
+.pulpito li.vers{color:#E9A7AE}
+.pulpito li.vers::before{background:#E9A7AE}
+.pulpito li a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(233,167,174,.5)}
+.pulpito .appunti{
+  margin-top:26px;padding-top:18px;border-top:1px solid rgba(217,196,138,.22);
+  font:400 18px/1.6 var(--serif);color:#BFC7BB;white-space:pre-wrap;
+}
+.pulpito .appunti .r{color:#E9A7AE;font-family:var(--sans);font-size:15px;font-weight:600;display:block;margin:14px 0 4px}
+.pulpito textarea,.pulpito .voce-edit input{
+  width:100%;background:rgba(255,255,255,.05);color:#F3F3EA;
+  border:1px solid rgba(217,196,138,.34);border-radius:10px;padding:11px 13px;
+  resize:none;overflow:hidden;display:block;
+}
+.pulpito .titolo-edit{font:700 27px/1.25 var(--serif);letter-spacing:-.02em}
+.pulpito .voce-edit{display:flex;gap:8px;align-items:flex-start;margin:0 0 10px}
+.pulpito .voce-edit input{font:400 21px/1.4 var(--serif)}
+.pulpito .voce-edit .togli{
+  flex:none;width:auto;color:#8C9789;font:400 22px/1 var(--sans);padding:9px 8px;background:none;border:none;
+}
+.pulpito .blocco-edit{margin:0 0 12px}
+.pulpito .blocco-edit textarea{font:400 17px/1.55 var(--serif)}
+.pulpito .etichetta{
+  display:block;font:600 12px/1 var(--sans);color:#D9C48A;margin:26px 0 10px;
+}
+.pulpito .oro-scuro{
+  border:1px solid rgba(217,196,138,.4);color:#D9C48A;background:rgba(217,196,138,.09);
+  border-radius:10px;padding:11px 14px;font:500 14px/1 var(--sans);
+}
+.pulpito .fila-edit{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.pulpito .basso{
+  display:flex;gap:10px;padding:12px 18px 16px;border-top:1px solid rgba(217,196,138,.22);
+}
+.pulpito .basso button{
+  flex:1;padding:15px;border-radius:12px;border:1px solid rgba(217,196,138,.3);
+  color:#EDEDE4;font:500 15px/1 var(--sans);background:rgba(255,255,255,.03);
+}
+.pulpito .basso button:disabled{opacity:.3}
+.pulpito .basso .mostra{flex:0 0 auto;padding:15px 16px}
+.progresso{display:flex;gap:4px;padding:0 18px 10px}
+.progresso i{flex:1;height:3px;border-radius:2px;background:rgba(217,196,138,.22)}
+.progresso i.on{background:#D9C48A}
+
+/* ---------- pannelli ---------- */
+.velo{position:fixed;inset:0;z-index:70;background:rgba(20,28,23,.5);display:flex;align-items:flex-end}
+.pannello{
+  background:var(--carta);width:100%;max-width:720px;margin:0 auto;
+  border-radius:18px 18px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom));
+  max-height:88vh;overflow-y:auto;
+}
+.pannello h3{margin:0 0 4px;font:600 21px/1.25 var(--serif)}
+.pannello p{margin:0 0 14px;font:400 14px/1.5 var(--sans);color:var(--tenue)}
+.pannello textarea{
+  width:100%;min-height:170px;border:1px solid var(--bordo);border-radius:11px;
+  padding:12px;background:#fff;font:400 15px/1.5 var(--serif);resize:vertical;
+}
+.pannello .fila{display:flex;gap:8px;margin-top:14px}
+.pannello .fila .btn{flex:1;justify-content:center}
+.riordina-riga{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--bordo)}
+.riordina-riga .tit{flex:1;min-width:0;font:400 15px/1.35 var(--serif);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.riordina-riga .tit i{color:#A8AE9F}
+select.posiz{
+  flex:none;font:600 13px/1 var(--sans);color:var(--inchiostro);background:var(--carta-alta);
+  border:1px solid var(--bordo);border-radius:9px;padding:10px 8px;
+}
+.elenco-azioni{display:flex;flex-direction:column;gap:2px;margin:6px 0 0}
+.elenco-azioni button{
+  text-align:left;padding:15px 4px;border-bottom:1px solid var(--bordo);
+  font:400 16px/1.3 var(--serif);
+}
+.elenco-azioni button.pericolo{color:var(--nastro)}
+.elenco-azioni button:last-child{border-bottom:none}
+
+.avviso{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + env(safe-area-inset-bottom));
+  z-index:80;background:var(--inchiostro);color:var(--carta-alta);
+  padding:11px 17px;border-radius:11px;font:500 14px/1.3 var(--sans);
+  max-width:88vw;text-align:center;
+}
+.allerta{
+  margin:12px 0;padding:11px 13px;border-radius:10px;background:#FBF3F3;
+  border:1px solid #E6CFD1;font:400 13.5px/1.45 var(--sans);color:#7A2D35;
+}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<nav class="barra" id="barra" hidden>
+  <div class="barra-in">
+    <button data-vista="scrivi"><span class="g">✎</span>Scrivi</button>
+    <button data-vista="scaletta"><span class="g">☰</span>Scaletta</button>
+    <button data-vista="pulpito"><span class="g">◆</span>Predica</button>
+  </div>
+</nav>
+
+<script>
+"use strict";
+
+/* ==========================================================
+   1. ARCHIVIO — salvataggio
+   ========================================================== */
+const CHIAVE = "filo:prediche:v1";
+let salvataggioOk = true;
+
+const Archivio = {
+  async carica(){
+    try{
+      if(window.storage && window.storage.get){
+        const r = await window.storage.get(CHIAVE);
+        if(r && r.value) return JSON.parse(r.value);
+      }
+    }catch(e){}
+    try{
+      const v = localStorage.getItem(CHIAVE);
+      if(v) return JSON.parse(v);
+    }catch(e){}
+    return null;
+  },
+  async salva(dati){
+    const s = JSON.stringify(dati);
+    let ok = false;
+    try{
+      if(window.storage && window.storage.set){ await window.storage.set(CHIAVE, s); ok = true; }
+    }catch(e){}
+    if(!ok){ try{ localStorage.setItem(CHIAVE, s); ok = true; }catch(e){} }
+    salvataggioOk = ok;
+    return ok;
+  }
+};
+
+let db = { versione:1, prediche:[] };
+let vista = "archivio";
+let apertaId = null;
+let slide = 0;
+let mostraAppunti = false;
+let modPulpito = false;
+let inizioPredica = null;
+let tickTimer = null;
+
+/* ==========================================================
+   2. UTILITÀ
+   ========================================================== */
+const $ = s => document.querySelector(s);
+const app = $("#app");
+const barra = $("#barra");
+const nuovoId = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const esc = s => (s==null?"":String(s)).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const RE_URL = /https?:\/\/[^\s<>"']+/g;
+const HA_URL = /https?:\/\/[^\s<>"']+/;   // senza flag g: sicuro per .test()
+
+function dataIt(iso){
+  if(!iso) return "";
+  const d = new Date(iso);
+  if(isNaN(d)) return iso;
+  return d.toLocaleDateString("it-IT",{day:"numeric",month:"long",year:"numeric"});
+}
+function oggiIso(){
+  const d = new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+let timerSalva = null;
+function segna(){
+  clearTimeout(timerSalva);
+  timerSalva = setTimeout(async ()=>{
+    const ok = await Archivio.salva(db);
+    if(!ok) mostraAvviso("Salvataggio non riuscito — esporta il tuo lavoro");
+  }, 350);
+}
+
+let timerAvviso = null;
+function mostraAvviso(testo){
+  const vecchio = $(".avviso");
+  if(vecchio) vecchio.remove();
+  const el = document.createElement("div");
+  el.className = "avviso";
+  el.textContent = testo;
+  document.body.appendChild(el);
+  clearTimeout(timerAvviso);
+  timerAvviso = setTimeout(()=>el.remove(), 2600);
+}
+
+function cresci(el){
+  if(!el) return;
+  el.style.height = "auto";
+  el.style.height = (el.scrollHeight + 2) + "px";
+}
+function cresciTutte(){
+  document.querySelectorAll("textarea.auto").forEach(cresci);
+}
+
+async function copia(testo){
+  try{
+    await navigator.clipboard.writeText(testo);
+    mostraAvviso("Copiato");
+    return;
+  }catch(e){}
+  const t = document.createElement("textarea");
+  t.value = testo; t.style.position="fixed"; t.style.opacity="0";
+  document.body.appendChild(t); t.select();
+  try{ document.execCommand("copy"); mostraAvviso("Copiato"); }
+  catch(e){ mostraAvviso("Copia non riuscita"); }
+  t.remove();
+}
+
+/* ==========================================================
+   3. MODELLO
+   ========================================================== */
+function nuovaPredica(){
+  return {
+    id: nuovoId(),
+    titolo: "",
+    passo: "",
+    data: oggiIso(),
+    creata: Date.now(),
+    punti: [nuovoPunto()]
+  };
+}
+function nuovoPunto(){
+  return { id:nuovoId(), titolo:"", blocchi:[nuovoBlocco("nota")], scaletta:[] };
+}
+function nuovoBlocco(tipo){
+  return tipo === "versetto"
+    ? { id:nuovoId(), tipo:"versetto", grezzo:"", modifica:true, aperto:false }
+    : { id:nuovoId(), tipo:"nota", testo:"", modifica:true };
+}
+const predicaCorrente = () => db.prediche.find(p => p.id === apertaId);
+const trovaPunto = id => { const p = predicaCorrente(); return p ? p.punti.find(x=>x.id===id) : null; };
+function trovaBlocco(pid, bid){ const p = trovaPunto(pid); return p ? p.blocchi.find(b=>b.id===bid) : null; }
+
+/* ==========================================================
+   4. VERSETTI — analisi del testo incollato da YouVersion
+   ========================================================== */
+function leggiVersetto(grezzo){
+  const t = (grezzo||"").trim();
+  if(!t) return {rif:"", testo:"", url:""};
+  const mUrl = t.match(RE_URL);
+  const url = mUrl ? mUrl[0] : "";
+  const corpo = t.replace(RE_URL,"").trim();
+  const righe = corpo.split("\n").map(r=>r.trim()).filter(Boolean);
+  let rif = righe[0] || "";
+  let testo = righe.slice(1).join("\n").trim();
+  if(righe.length === 1){
+    const m = corpo.match(/^([^\[]{0,70}?\d{1,3}[:,]\s?\d{1,3}(?:\s?[-–]\s?\d{1,3})?(?:\s+[A-Za-z0-9]{2,8})?)\s*([\s\S]*)$/);
+    if(m && m[2] && m[2].trim().length > 12){ rif = m[1].trim(); testo = m[2].trim(); }
+  }
+  rif = rif.replace(/^[«"']|[»"']$/g,"").trim();
+  return {rif, testo, url};
+}
+function linkVersetto(v){
+  if(v.url) return v.url;
+  if(v.rif) return "https://www.bible.com/search/bible?q=" + encodeURIComponent(v.rif);
+  return "";
+}
+
+function evidenzia(t){
+  return t.replace(/\b[A-ZÀ-Ú]{4,}\b/g, w => '<b class="forte">' + w + '</b>');
+}
+function linkifica(s){
+  const pezzi = [];
+  const re = new RegExp(RE_URL.source, "g");
+  let ultimo = 0, m;
+  while((m = re.exec(s))){
+    pezzi.push(evidenzia(esc(s.slice(ultimo, m.index))));
+    pezzi.push('<a href="' + esc(m[0]) + '" target="_blank" rel="noopener">'
+      + esc(m[0].replace(/^https?:\/\//,"").slice(0,48)) + '</a>');
+    ultimo = m.index + m[0].length;
+  }
+  pezzi.push(evidenzia(esc(s.slice(ultimo))));
+  return pezzi.join("");
+}
+function notaRender(testo){
+  const righe = (testo||"").split("\n");
+  let out = "", inLista = false;
+  for(const r0 of righe){
+    const r = r0.trim();
+    if(!r){ if(inLista){ out += "</ul>"; inLista = false; } continue; }
+    if(/^[-*•·–>]\s?/.test(r)){
+      if(!inLista){ out += "<ul>"; inLista = true; }
+      out += "<li>" + linkifica(r.replace(/^[-*•·–>]\s?/,"")) + "</li>";
+    }else{
+      if(inLista){ out += "</ul>"; inLista = false; }
+      out += "<p>" + linkifica(r) + "</p>";
+    }
+  }
+  if(inLista) out += "</ul>";
+  return out || '<p class="vuota">Nota vuota — tocca Modifica per scrivere.</p>';
+}
+
+/* ==========================================================
+   5. GENERATORE DI SCALETTA
+   ========================================================== */
+const STOP = new Set(("a ad agli ai al alla alle allo altre altri altro anche ancora avendo avere aveva avevamo avevano avete avevi avevo avrà avranno avrebbe avremo avrei avuto c che chi ci ciò cioè coi col come con contro cosa così cui da dagli dai dal dall dalla dalle dallo degli dei del dell della delle dello dentro di dopo dov dove dovuto due e ebbe ecco ed egli ella era erano eravamo eri ero essa esse essendo essere essi esso fa faccio fanno fare fatto fin fino forse fosse fra fu fui furono gli ha hai hanno ho i il in invece io l la le lei li lo loro lui ma me mentre mi mia mie miei mio molta molte molti molto ne nei nel nell nella nelle nello negli no noi non nostra nostre nostri nostro o od oltre ogni oppure ora per perché perchè però piu più po poco poi prima proprio qua qual quale quali qualsiasi quando quanta quante quanti quanto quasi quel quella quelle quelli quello questa queste questi questo qui sarà saranno sarebbe saremo sarei sei sempre senza si sia siamo siete sono sopra sotto sta stai stanno stare stata state stati stato stesso su sua sue sui sul sull sulla sulle sullo suo suoi te ti tra tu tua tue tuo tuoi tutta tutte tutti tutto un una uno va vai vi via voi vostra vostre vostri vostro è").split(" "));
+
+function parole(t){
+  return (t||"").toLowerCase()
+    .replace(/[^\p{L}\p{N}\s'-]/gu," ")
+    .split(/[\s'-]+/).filter(w=>w.length>2);
+}
+function frasi(t){
+  return (t||"")
+    .replace(/([.!?…:])\s+/g,"$1\n")
+    .split("\n").map(s=>s.trim()).filter(s=>s.length>3);
+}
+function eBullet(r){ return /^[-*•·–>]\s?/.test(r); }
+
+function condensa(frase, max){
+  max = max || 7;
+  let t = frase.replace(RE_URL,"").replace(/\s+/g," ").trim()
+               .replace(/^[-*•·–>]\s?/,"").replace(/[«»"“”]/g,"");
+  const grezze = t.split(" ").filter(Boolean);
+  if(grezze.length <= max) return t.replace(/[.,;:]+$/,"");
+  const CODA = new Set(["quindi","perché","perchè","però","invece","oppure","mentre","nonostante","soprattutto","semplicemente","davvero","anche","ancora","affinché","dunque","cioè"]);
+  const tenute = [];
+  for(const p of grezze){
+    const nudo = p.replace(/[^\p{L}\p{N}'-]/gu,"");
+    if(nudo.length < 2) continue;
+    const maiusc = nudo.length > 3 && nudo === nudo.toUpperCase() && /\p{L}/u.test(nudo);
+    if(!(maiusc || !STOP.has(nudo.toLowerCase()))) continue;
+    const prec = tenute[tenute.length-1];
+    if(prec && prec.toLowerCase() === nudo.toLowerCase()) continue;
+    tenute.push(nudo);
+    if(tenute.length >= max) break;
+  }
+  while(tenute.length > 2 && CODA.has(tenute[tenute.length-1].toLowerCase())) tenute.pop();
+  return tenute.length >= 2 ? tenute.join(" ") : grezze.slice(0,max).join(" ");
+}
+
+function punteggio(frase, freq, primo){
+  const ps = parole(frase);
+  const cont = ps.filter(p => !STOP.has(p));
+  if(!cont.length) return -99;
+  let s = 0;
+  for(const p of cont) s += Math.min(freq[p]||1, 4);
+  s = s / Math.sqrt(Math.max(ps.length, 5));
+  if(/[A-ZÀ-Ù]{4,}/.test(frase)) s += 3;
+  if(/\b\d{1,3}[:,]\s?\d{1,3}\b/.test(frase)) s += 1.6;
+  if(primo) s += 1.2;
+  if(ps.length < 4) s -= 1.5;
+  return s;
+}
+
+function generaScaletta(punto, freq){
+  const voci = [];
+  for(const b of punto.blocchi){
+    if(b.tipo === "versetto"){
+      const v = leggiVersetto(b.grezzo);
+      if(v.rif) voci.push({ testo:v.rif, url:linkVersetto(v), vers:true });
+      continue;
+    }
+    const testo = (b.testo||"").trim();
+    if(!testo) continue;
+    const righe = testo.split("\n").map(r=>r.trim()).filter(Boolean);
+    const prosa = [];
+    righe.forEach((r,i)=>{
+      if(eBullet(r)) voci.push({ testo:condensa(r,8), vers:false, ord:i });
+      else prosa.push({ t:r, i });
+    });
+    if(prosa.length){
+      const tutte = [];
+      prosa.forEach(p => frasi(p.t).forEach((f,k) => tutte.push({ f, ord:p.i + k/100 })));
+      const quante = tutte.length <= 3 ? tutte.length : Math.min(4, Math.ceil(tutte.length/2.5));
+      tutte
+        .map((x,i)=>({ ...x, s:punteggio(x.f, freq, i===0) }))
+        .sort((a,b)=>b.s-a.s)
+        .slice(0, quante)
+        .sort((a,b)=>a.ord-b.ord)
+        .forEach(x => voci.push({ testo:condensa(x.f), vers:false, ord:x.ord }));
+    }
+  }
+  const viste = new Set();
+  return voci.filter(v=>{
+    const k = v.testo.toLowerCase().replace(/\s+/g," ");
+    if(!k || viste.has(k)) return false;
+    viste.add(k); return true;
+  }).slice(0,9).map(v=>({ testo:v.testo, url:v.url||"", vers:!!v.vers }));
+}
+
+function frequenze(predica){
+  const f = {};
+  for(const pt of predica.punti){
+    for(const w of parole(pt.titolo)) f[w] = (f[w]||0)+1;
+    for(const b of pt.blocchi){
+      const t = b.tipo==="nota" ? b.testo : leggiVersetto(b.grezzo).testo;
+      for(const w of parole(t)) f[w] = (f[w]||0)+1;
+    }
+  }
+  return f;
+}
+
+function punteVuoto(punto){
+  return !punto.blocchi.some(b => (b.tipo==="nota" ? (b.testo||"").trim() : (b.grezzo||"").trim()));
+}
+
+/* ==========================================================
+   6. IMPORTAZIONE DA WHATSAPP
+   ========================================================== */
+const RE_MSG = /^\[?(\d{1,2}[\/.]\d{1,2}(?:[\/.]\d{2,4})?),?\s+(\d{1,2}:\d{2}(?::\d{2})?)\s?(?:[APap]\.?[Mm]\.?)?\]?\s*(?:[-–]\s*)?([^:\n]{1,60}?):\s?([\s\S]*)$/;
+const RE_SEGNO = /^\s*(\d{1,2})(?:\uFE0F)?\u20E3\s*$|^\s*(\d{1,2})\s*[.)°]?\s*$/;
+
+function importaWhatsApp(testo){
+  const linee = (testo||"").split(/\r?\n/);
+  const messaggi = [];
+  for(const l of linee){
+    const m = l.match(RE_MSG);
+    if(m) messaggi.push(m[4].trim());
+    else if(messaggi.length) messaggi[messaggi.length-1] += "\n" + l;
+    else if(l.trim()) messaggi.push(l.trim());
+  }
+  const puliti = messaggi.map(m=>m.trim()).filter(m => m && !/^(<Media omessi>|<Media omitted>|null)$/i.test(m));
+  const punti = [];
+  let corrente = null;
+  let attesaTitolo = false;
+
+  const apri = () => { corrente = nuovoPunto(); corrente.blocchi = []; punti.push(corrente); };
+
+  for(const msg of puliti){
+    if(RE_SEGNO.test(msg)){ apri(); attesaTitolo = true; continue; }
+    if(!corrente){ apri(); attesaTitolo = true; }
+    if(attesaTitolo && msg.length <= 120 && msg.split("\n").length === 1 && !HA_URL.test(msg)){
+      corrente.titolo = msg; attesaTitolo = false; continue;
+    }
+    attesaTitolo = false;
+    const haLink = /bible\.com|bibbia|youversion/i.test(msg) && HA_URL.test(msg);
+    if(haLink || /^\S.{0,60}\d{1,3}[:,]\d{1,3}[\s\S]*\[\d+\]/.test(msg)){
+      const b = nuovoBlocco("versetto");
+      b.grezzo = msg; b.modifica = false;
+      corrente.blocchi.push(b);
+    }else{
+      const b = nuovoBlocco("nota");
+      b.testo = msg; b.modifica = false;
+      corrente.blocchi.push(b);
+    }
+  }
+  punti.forEach((p,i)=>{
+    if(!p.blocchi.length) p.blocchi.push(nuovoBlocco("nota"));
+    if(!p.titolo){
+      const v = p.blocchi.find(b=>b.tipo==="versetto");
+      const n = p.blocchi.find(b=>b.tipo==="nota" && (b.testo||"").trim());
+      if(v) p.titolo = leggiVersetto(v.grezzo).rif;
+      else if(n) p.titolo = condensa(frasi(n.testo)[0] || n.testo, 8);
+      if(!p.titolo) p.titolo = "Punto " + (i+1);
+    }
+  });
+  return punti;
+}
+
+/* ==========================================================
+   7. TESTO DA CONDIVIDERE
+   ========================================================== */
+function scalettaTesto(p){
+  const r = [];
+  r.push((p.titolo || "Senza titolo").toUpperCase());
+  const sotto = [p.passo, dataIt(p.data)].filter(Boolean).join("  ·  ");
+  if(sotto) r.push(sotto);
+  r.push("");
+  p.punti.forEach((pt,i)=>{
+    r.push((i+1) + ". " + (pt.titolo || "—"));
+    (pt.scaletta||[]).forEach(v => r.push("   • " + v.testo + (v.url ? "  " + v.url : "")));
+    r.push("");
+  });
+  return r.join("\n").trim();
+}
+function appuntiTesto(p){
+  const r = [];
+  r.push((p.titolo || "Senza titolo").toUpperCase());
+  const sotto = [p.passo, dataIt(p.data)].filter(Boolean).join("  ·  ");
+  if(sotto) r.push(sotto);
+  r.push("");
+  p.punti.forEach((pt,i)=>{
+    r.push("── " + (i+1) + ". " + (pt.titolo || "—"));
+    pt.blocchi.forEach(b=>{
+      if(b.tipo === "nota"){ if((b.testo||"").trim()) r.push(b.testo.trim()); }
+      else{
+        const v = leggiVersetto(b.grezzo);
+        if(v.rif) r.push(v.rif + (v.url ? "\n" + v.url : ""));
+        if(v.testo) r.push(v.testo);
+      }
+      r.push("");
+    });
+  });
+  return r.join("\n").trim();
+}
+
+/* ==========================================================
+   8. VISTE
+   ========================================================== */
+function render(){
+  barra.hidden = !(apertaId && vista !== "archivio" && vista !== "pulpito");
+  document.body.style.paddingBottom = barra.hidden ? "24px" : "";
+  if(vista === "pulpito"){ renderPulpito(); return; }
+  fermaOrologio();
+  if(vista === "archivio") renderArchivio();
+  else if(vista === "scaletta") renderScaletta();
+  else renderScrivi();
+  barra.querySelectorAll("button").forEach(b=>{
+    b.setAttribute("aria-current", b.dataset.vista === vista ? "true" : "false");
+  });
+  cresciTutte();
+}
+
+/* --- 8a. archivio --- */
+function renderArchivio(){
+  const lista = [...db.prediche].sort((a,b)=>(b.data||"").localeCompare(a.data||"") || b.creata-a.creata);
+  app.innerHTML = `
+    <div class="schermo">
+      <header class="masthead">
+        <h1>Filo<em>.</em></h1>
+        <p>Il filo del discorso: appunti, versetti e scaletta di parole chiave, in un posto solo.</p>
+      </header>
+      ${!salvataggioOk ? '<div class="allerta">Questo browser non sta salvando i dati. Usa Esporta per conservare il lavoro.</div>' : ""}
+      ${lista.length ? lista.map(p=>`
+        <button class="scheda" data-az="apri" data-id="${p.id}">
+          <h2>${esc(p.titolo || "Senza titolo")}</h2>
+          <div class="meta">
+            ${p.passo ? `<span class="passo">${esc(p.passo)}</span> · ` : ""}
+            ${p.punti.length} punt${p.punti.length===1?"o":"i"}${p.data ? " · " + esc(dataIt(p.data)) : ""}
+          </div>
+        </button>`).join("")
+      : `<div class="vuoto">
+           <p>Non c'è ancora nessuna predicazione. Comincia da un titolo e da un primo punto: gli altri si aggiungono mentre il discorso cresce.</p>
+           <button class="btn oro" data-az="nuova">Nuova predicazione</button>
+         </div>`}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 10px">
+        ${lista.length ? '<button class="btn oro" data-az="nuova">Nuova predicazione</button>' : ""}
+        <button class="btn chiaro" data-az="pannello-whatsapp">Importa da WhatsApp</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 40px">
+        <button class="minuto" data-az="esporta">Esporta archivio</button>
+        <button class="minuto" data-az="importa">Importa archivio</button>
+      </div>
+    </div>`;
+}
+
+/* --- 8b. scrivi --- */
+function renderScrivi(){
+  const p = predicaCorrente();
+  if(!p){ vista="archivio"; return render(); }
+  const qualcosaAperto = p.punti.some(pt => pt.blocchi.some(b => b.modifica));
+  app.innerHTML = testata(p, [
+    `<button class="icona ${qualcosaAperto?"attiva":""}" data-az="apri-tutto" title="${qualcosaAperto?"Chiudi tutte le modifiche":"Modifica tutto"}">✎</button>`,
+    `<button class="icona" data-az="pannello-predica" title="Opzioni">⋯</button>`
+  ]) + `
+    <div class="schermo">
+      <div class="intestazione">
+        <textarea class="campo-titolo auto" rows="1" data-campo="titolo" placeholder="Titolo della predicazione">${esc(p.titolo)}</textarea>
+        <div class="riga-meta">
+          <input class="campo-meta" data-campo="passo" value="${esc(p.passo)}" placeholder="Passo principale">
+          <input class="campo-meta" data-campo="data" type="date" value="${esc(p.data)}">
+        </div>
+      </div>
+      ${striscia(p)}
+      <div class="punti">
+        ${p.punti.map((pt,i)=>puntoHtml(pt,i,p.punti.length)).join("")}
+        <div style="padding-left:42px">
+          <button class="btn oro" data-az="punto-nuovo">Aggiungi punto ${p.punti.length+1}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function testata(p, azioni){
+  return `<header class="testata">
+    <div class="testata-in">
+      <div style="min-width:0">
+        <button class="indietro" data-az="archivio">Archivio</button>
+        <h1 style="margin-top:2px">${esc(p.titolo || "Senza titolo")}</h1>
+        <div class="sotto">${p.passo ? esc(p.passo) + " · " : ""}${p.punti.length} punt${p.punti.length===1?"o":"i"}</div>
+      </div>
+      <div class="azioni-testata">${(azioni||[]).join("")}</div>
+    </div>
+  </header>`;
+}
+
+function striscia(p){
+  return `<div class="striscia">
+    ${p.punti.map((pt,i)=>`
+      <button class="pastiglia ${punteVuoto(pt)?"muto":""}" data-az="vai" data-id="${pt.id}">
+        <b>${i+1}</b><span>${esc(pt.titolo || "senza titolo")}</span>
+      </button>`).join("")}
+  </div>`;
+}
+
+function puntoHtml(pt, i, tot){
+  return `<article class="punto" id="p-${pt.id}" data-p="${pt.id}">
+    <span class="segno">${i+1}</span>
+    <textarea class="titolo-punto auto" rows="1" data-campo="titolo-punto" data-p="${pt.id}" placeholder="Di cosa parla questo punto">${esc(pt.titolo)}</textarea>
+    ${pt.blocchi.map(b => b.tipo==="versetto" ? versettoHtml(pt.id,b) : notaHtml(pt.id,b)).join("")}
+    <div class="aggiungi">
+      <button class="minuto" data-az="blocco-nota" data-p="${pt.id}">+ Nota</button>
+      <button class="minuto rosso" data-az="blocco-versetto" data-p="${pt.id}">+ Versetto</button>
+    </div>
+    <div class="piede-punto">
+      <button class="minuto" data-az="su" data-p="${pt.id}" ${i===0?"disabled":""}>↑</button>
+      <button class="minuto" data-az="giu" data-p="${pt.id}" ${i===tot-1?"disabled":""}>↓</button>
+      ${selettorePosizione(pt.id, i, tot)}
+      <button class="minuto" data-az="duplica" data-p="${pt.id}">Duplica</button>
+      <button class="minuto rosso" data-az="elimina-punto" data-p="${pt.id}">Elimina</button>
+    </div>
+  </article>`;
+}
+
+function selettorePosizione(pid, i, tot){
+  let opt = "";
+  for(let k=0;k<tot;k++) opt += `<option value="${k}" ${k===i?"selected":""}>${k+1}°</option>`;
+  return `<select class="posiz" data-campo="posizione" data-p="${pid}" aria-label="Posizione del punto">${opt}</select>`;
+}
+
+function notaHtml(pid, b){
+  if(b.modifica){
+    return `<div class="blocco" data-b="${b.id}">
+      <textarea class="nota auto" data-campo="nota" data-p="${pid}" data-b="${b.id}"
+        placeholder="Scrivi qui. Le righe che iniziano con * diventano parole chiave della scaletta.">${esc(b.testo)}</textarea>
+      <div class="riga-tocco">
+        <button class="tocco rosso" data-az="elimina-blocco" data-p="${pid}" data-b="${b.id}">Togli</button>
+        <button class="minuto" data-az="nota-chiudi" data-p="${pid}" data-b="${b.id}">Fatto</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="blocco" data-b="${b.id}">
+    <div class="nota-letta">${notaRender(b.testo)}</div>
+    <div class="riga-tocco"><button class="tocco" data-az="nota-apri" data-p="${pid}" data-b="${b.id}">Modifica</button></div>
+  </div>`;
+}
+
+function versettoHtml(pid, b){
+  const v = leggiVersetto(b.grezzo);
+  const url = linkVersetto(v);
+  if(b.modifica || !v.rif){
+    return `<div class="blocco versetto" data-b="${b.id}">
+      <textarea class="auto" data-campo="versetto" data-p="${pid}" data-b="${b.id}"
+        placeholder="Incolla qui il versetto copiato da YouVersion (riferimento, testo e link).">${esc(b.grezzo)}</textarea>
+      <p class="aiuto">Il riferimento diventa un link che apre YouVersion. Il testo resta qui sotto, richiudibile.</p>
+      <div class="riga-tocco">
+        <button class="tocco rosso" data-az="elimina-blocco" data-p="${pid}" data-b="${b.id}">Togli</button>
+        <button class="minuto" data-az="versetto-chiudi" data-p="${pid}" data-b="${b.id}">Fatto</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="blocco versetto" data-b="${b.id}">
+    <a class="rif ${v.url?"":"spento"}" href="${esc(url)}" target="_blank" rel="noopener">${esc(v.rif)}</a>
+    ${v.testo ? `<div class="corpo ${b.aperto?"aperto":"chiuso"}" data-az="versetto-espandi" data-p="${pid}" data-b="${b.id}">${esc(v.testo)}</div>` : ""}
+    <div class="riga-tocco"><button class="tocco" data-az="versetto-apri" data-p="${pid}" data-b="${b.id}">Modifica</button></div>
+  </div>`;
+}
+
+/* --- 8c. scaletta --- */
+function renderScaletta(){
+  const p = predicaCorrente();
+  if(!p){ vista="archivio"; return render(); }
+  const conScaletta = p.punti.filter(pt=>(pt.scaletta||[]).length).length;
+  app.innerHTML = testata(p, [
+    `<button class="icona" data-az="copia-scaletta" title="Copia">⧉</button>`
+  ]) + `
+    <div class="schermo">
+      <div class="barra-scaletta">
+        <button class="btn oro" data-az="genera">Genera scaletta</button>
+        ${conScaletta ? `<button class="minuto" data-az="rigenera-tutto">Rifai tutto</button>` : ""}
+      </div>
+      ${!conScaletta ? `<div class="vuoto">
+          <p>La scaletta non c'è ancora. Premi <b>Genera scaletta</b>: dai tuoi appunti vengono estratte le parole chiave, punto per punto, e i riferimenti biblici restano cliccabili.</p>
+          <p style="margin:0;font-size:14px">Ogni voce resta modificabile, e puoi aggiungerne o toglierne quante vuoi.</p>
+        </div>` : ""}
+      <div class="punti">
+        ${p.punti.map((pt,i)=>`
+          <article class="punto" id="p-${pt.id}" data-p="${pt.id}">
+            <span class="segno">${i+1}</span>
+            <textarea class="titolo-punto auto" rows="1" data-campo="titolo-punto" data-p="${pt.id}" placeholder="Titolo del punto">${esc(pt.titolo)}</textarea>
+            ${(pt.scaletta||[]).length ? "" : `<p class="nota-punto-scaletta">${punteVuoto(pt) ? "Nessun appunto in questo punto." : "Ancora da generare."}</p>`}
+            ${pt.aperto
+              ? (pt.scaletta||[]).map((v,k)=>`
+                  <div class="voce ${v.vers?"vers":""}">
+                    <i class="puntino"></i>
+                    <input data-campo="voce" data-p="${pt.id}" data-i="${k}" value="${esc(v.testo)}" placeholder="parola chiave">
+                    <button class="togli" data-az="voce-togli" data-p="${pt.id}" data-i="${k}" aria-label="Togli">×</button>
+                  </div>`).join("")
+              : (pt.scaletta||[]).map(v=>`
+                  <div class="voce-letta ${v.vers?"vers":""}">
+                    <i class="puntino"></i>
+                    <span>${v.url
+                      ? `<a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.testo)}</a>`
+                      : (esc(v.testo) || '<i class="vuota">voce vuota</i>')}</span>
+                  </div>`).join("")}
+            ${pt.aperto
+              ? `<div class="aggiungi">
+                   <button class="minuto" data-az="voce-nuova" data-p="${pt.id}">+ Voce</button>
+                   <button class="minuto" data-az="rigenera" data-p="${pt.id}">Rigenera</button>
+                   <button class="minuto" data-az="voci-chiudi" data-p="${pt.id}">Fatto</button>
+                 </div>`
+              : `<div class="riga-tocco"><button class="tocco" data-az="voci-apri" data-p="${pt.id}">Modifica</button></div>`}
+          </article>`).join("")}
+      </div>
+      <div style="margin:0 0 40px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="minuto" data-az="copia-scaletta">Copia scaletta</button>
+        <button class="minuto" data-az="copia-appunti">Copia appunti completi</button>
+      </div>
+    </div>`;
+}
+
+/* --- 8d. pulpito --- */
+function renderPulpito(){
+  const p = predicaCorrente();
+  if(!p){ vista="archivio"; return render(); }
+  slide = Math.max(0, Math.min(slide, p.punti.length-1));
+  const pt = p.punti[slide];
+  const voci = pt.scaletta || [];
+  const mod = modPulpito;
+  if(!inizioPredica) inizioPredica = Date.now();
+  avviaOrologio();
+
+  const appuntiLetti = pt.blocchi.map(b=>{
+    if(b.tipo === "nota") return esc(b.testo||"");
+    const v = leggiVersetto(b.grezzo);
+    return (v.rif ? `<span class="r">${esc(v.rif)}</span>` : "") + esc(v.testo||"");
+  }).filter(Boolean).join("\n\n");
+
+  const appuntiScritti = pt.blocchi.map(b => b.tipo === "nota"
+    ? `<div class="blocco-edit"><textarea class="auto" data-campo="nota" data-p="${pt.id}" data-b="${b.id}" placeholder="Appunto">${esc(b.testo)}</textarea></div>`
+    : `<div class="blocco-edit"><textarea class="auto" data-campo="versetto" data-p="${pt.id}" data-b="${b.id}" placeholder="Versetto copiato da YouVersion">${esc(b.grezzo)}</textarea></div>`
+  ).join("");
+
+  const listaVoci = voci.length
+    ? `<ul>${voci.map(v=>`
+        <li class="${v.vers?"vers":""}">${v.url
+          ? `<a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.testo)}</a>`
+          : esc(v.testo)}</li>`).join("")}</ul>`
+    : `<p style="color:#8C9789;font-size:18px;margin-top:24px">Nessuna parola chiave. Tocca Modifica qui sopra per scriverle o generarle.</p>`;
+
+  const vociScritte = `
+    ${voci.map((v,k)=>`
+      <div class="voce-edit">
+        <input data-campo="voce" data-p="${pt.id}" data-i="${k}" value="${esc(v.testo)}" placeholder="parola chiave">
+        <button class="togli" data-az="voce-togli" data-p="${pt.id}" data-i="${k}" aria-label="Togli">×</button>
+      </div>`).join("")}
+    <div class="fila-edit">
+      <button class="oro-scuro" data-az="voce-nuova" data-p="${pt.id}">+ Voce</button>
+      <button class="oro-scuro" data-az="rigenera" data-p="${pt.id}">${voci.length?"Rigenera":"Genera dagli appunti"}</button>
+    </div>`;
+
+  app.innerHTML = `
+    <div class="pulpito">
+      <div class="alto">
+        <span class="conta">${slide+1} / ${p.punti.length}</span>
+        <span class="orolo" id="orolo" data-az="azzera-orologio">0:00</span>
+        <button class="esci" data-az="${mod?"pulpito-fine":"pulpito-modifica"}" style="${mod?"color:#D9C48A":""}">${mod?"Fatto":"Modifica"}</button>
+        <button class="esci" data-az="esci-pulpito">Chiudi</button>
+      </div>
+      <div class="foglio" id="foglio">
+        <span class="numero">Punto ${slide+1}</span>
+        ${mod
+          ? `<textarea class="auto titolo-edit" rows="1" data-campo="titolo-punto" data-p="${pt.id}" placeholder="Titolo del punto">${esc(pt.titolo)}</textarea>
+             <span class="etichetta">Parole chiave</span>${vociScritte}
+             <span class="etichetta">Appunti</span>${appuntiScritti}`
+          : `<h2>${esc(pt.titolo || "—")}</h2>${listaVoci}
+             ${mostraAppunti && appuntiLetti ? `<div class="appunti">${appuntiLetti}</div>` : ""}`}
+      </div>
+      <div class="progresso">${p.punti.map((_,i)=>`<i class="${i<=slide?"on":""}"></i>`).join("")}</div>
+      <div class="basso">
+        <button data-az="prec" ${slide===0?"disabled":""}>Indietro</button>
+        ${mod
+          ? `<button class="mostra" data-az="blocco-nota" data-p="${pt.id}">+ Nota</button>`
+          : `<button class="mostra" data-az="appunti">${mostraAppunti?"Solo chiavi":"Appunti"}</button>`}
+        <button data-az="succ" ${slide===p.punti.length-1?"disabled":""}>Avanti</button>
+      </div>
+    </div>`;
+  barra.hidden = true;
+  cresciTutte();
+}
+
+function avviaOrologio(){
+  fermaOrologio();
+  tickTimer = setInterval(()=>{
+    const el = document.getElementById("orolo");
+    if(!el || !inizioPredica) return;
+    const s = Math.floor((Date.now()-inizioPredica)/1000);
+    el.textContent = Math.floor(s/60) + ":" + String(s%60).padStart(2,"0");
+  }, 1000);
+}
+function fermaOrologio(){ if(tickTimer){ clearInterval(tickTimer); tickTimer=null; } }
+
+/* ==========================================================
+   9. PANNELLI
+   ========================================================== */
+function chiudiPannello(){ const v = $(".velo"); if(v) v.remove(); }
+
+function apriPannello(html){
+  chiudiPannello();
+  const velo = document.createElement("div");
+  velo.className = "velo";
+  velo.innerHTML = `<div class="pannello">${html}</div>`;
+  velo.addEventListener("click", e => { if(e.target === velo) chiudiPannello(); });
+  document.body.appendChild(velo);
+}
+
+function pannelloWhatsApp(){
+  apriPannello(`
+    <h3>Importa da WhatsApp</h3>
+    <p>Incolla qui i messaggi come li hai scritti. I messaggi con 1️⃣ 2️⃣ 3️⃣ aprono un nuovo punto, il messaggio dopo diventa il titolo e i versetti con link diventano schede cliccabili.</p>
+    <textarea id="testo-wa" placeholder="[06/09, 08:54] Nome: 1️⃣&#10;[06/09, 08:56] Nome: ..."></textarea>
+    <div class="fila">
+      <button class="btn chiaro" data-az="chiudi-pannello">Annulla</button>
+      <button class="btn oro" data-az="fai-import-wa">Crea predicazione</button>
+    </div>`);
+}
+
+function pannelloRiordina(){
+  const p = predicaCorrente();
+  apriPannello(`
+    <h3>Riordina i punti</h3>
+    <p>Scegli il numero per portare un punto dove vuoi: la sequenza si ricompone da sola.</p>
+    <div>
+      ${p.punti.map((pt,i)=>`
+        <div class="riordina-riga">
+          ${selettorePosizione(pt.id, i, p.punti.length)}
+          <span class="tit">${esc(pt.titolo) || "<i>senza titolo</i>"}</span>
+          <button class="minuto" data-az="su" data-p="${pt.id}" ${i===0?"disabled":""}>↑</button>
+          <button class="minuto" data-az="giu" data-p="${pt.id}" ${i===p.punti.length-1?"disabled":""}>↓</button>
+        </div>`).join("")}
+    </div>
+    <div class="fila"><button class="btn oro" data-az="chiudi-pannello">Fatto</button></div>`);
+}
+
+function pannelloPredica(){
+  const p = predicaCorrente();
+  apriPannello(`
+    <h3>${esc(p.titolo || "Senza titolo")}</h3>
+    <div class="elenco-azioni">
+      <button data-az="pannello-riordina">Riordina i punti</button>
+      <button data-az="copia-scaletta">Copia la scaletta</button>
+      <button data-az="copia-appunti">Copia gli appunti completi</button>
+      <button data-az="aggiungi-wa">Aggiungi punti da WhatsApp</button>
+      <button data-az="duplica-predica">Duplica la predicazione</button>
+      <button data-az="esporta">Esporta tutto l'archivio</button>
+      <button class="pericolo" data-az="elimina-predica">Elimina questa predicazione</button>
+    </div>`);
+}
+
+/* ==========================================================
+   10. EVENTI
+   ========================================================== */
+document.addEventListener("click", async (e)=>{
+  const t = e.target.closest("[data-az]");
+  if(!t) return;
+  const az = t.dataset.az;
+  const pid = t.dataset.p, bid = t.dataset.b;
+  const p = predicaCorrente();
+
+  switch(az){
+    case "nuova": {
+      const n = nuovaPredica();
+      db.prediche.push(n); apertaId = n.id; vista = "scrivi"; segna(); render();
+      const c = $(".campo-titolo"); if(c) c.focus();
+      break;
+    }
+    case "apri": apertaId = t.dataset.id; vista = "scrivi"; render(); break;
+    case "archivio": apertaId = null; vista = "archivio"; inizioPredica = null; render(); break;
+
+    case "vai": {
+      const el = document.getElementById("p-" + t.dataset.id);
+      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+      break;
+    }
+
+    case "punto-nuovo": {
+      const n = nuovoPunto();
+      p.punti.push(n); segna(); render();
+      const el = document.getElementById("p-" + n.id);
+      if(el){ el.scrollIntoView({behavior:"smooth", block:"center"}); const i = el.querySelector("input"); if(i) i.focus(); }
+      break;
+    }
+    case "su": case "giu": {
+      const i = p.punti.findIndex(x=>x.id===pid);
+      const j = az==="su" ? i-1 : i+1;
+      if(j<0 || j>=p.punti.length) break;
+      [p.punti[i], p.punti[j]] = [p.punti[j], p.punti[i]];
+      segna();
+      const inPannello = !!t.closest(".velo");
+      render();
+      if(inPannello) pannelloRiordina();
+      break;
+    }
+    case "duplica": {
+      const i = p.punti.findIndex(x=>x.id===pid);
+      const copia2 = JSON.parse(JSON.stringify(p.punti[i]));
+      copia2.id = nuovoId();
+      copia2.blocchi.forEach(b=>b.id=nuovoId());
+      p.punti.splice(i+1, 0, copia2); segna(); render();
+      break;
+    }
+    case "elimina-punto": {
+      if(p.punti.length === 1){ mostraAvviso("Serve almeno un punto"); break; }
+      if(!confirm("Eliminare questo punto e i suoi appunti?")) break;
+      p.punti = p.punti.filter(x=>x.id!==pid); segna(); render();
+      break;
+    }
+
+    case "blocco-nota": case "blocco-versetto": {
+      const pt = trovaPunto(pid);
+      pt.blocchi.push(nuovoBlocco(az==="blocco-versetto" ? "versetto" : "nota"));
+      segna(); render();
+      const nodi = document.querySelectorAll(`#p-${pid} textarea`);
+      const ultimo = nodi[nodi.length-1];
+      if(ultimo){ ultimo.focus(); ultimo.scrollIntoView({block:"center"}); }
+      break;
+    }
+    case "elimina-blocco": {
+      const pt = trovaPunto(pid);
+      pt.blocchi = pt.blocchi.filter(b=>b.id!==bid);
+      if(!pt.blocchi.length) pt.blocchi.push(nuovoBlocco("nota"));
+      segna(); render();
+      break;
+    }
+    case "nota-apri": {
+      trovaBlocco(pid,bid).modifica = true; segna(); render();
+      const t2 = document.querySelector(`.blocco[data-b="${bid}"] textarea`);
+      if(t2){ t2.focus(); const n = t2.value.length; t2.setSelectionRange(n,n); }
+      break;
+    }
+    case "nota-chiudi": { trovaBlocco(pid,bid).modifica = false; segna(); render(); break; }
+    case "apri-tutto": {
+      const acceso = p.punti.some(pt => pt.blocchi.some(b => b.modifica));
+      p.punti.forEach(pt => pt.blocchi.forEach(b => b.modifica = !acceso));
+      segna(); render();
+      mostraAvviso(acceso ? "Modifiche chiuse" : "Tutto aperto in modifica");
+      break;
+    }
+    case "voci-apri": { trovaPunto(pid).aperto = true; segna(); render(); break; }
+    case "voci-chiudi": { trovaPunto(pid).aperto = false; segna(); render(); break; }
+    case "versetto-apri": { trovaBlocco(pid,bid).modifica = true; segna(); render(); break; }
+    case "versetto-chiudi": { trovaBlocco(pid,bid).modifica = false; segna(); render(); break; }
+    case "versetto-espandi": { const b = trovaBlocco(pid,bid); b.aperto = !b.aperto; segna(); render(); break; }
+
+    case "genera": {
+      const freq = frequenze(p);
+      let n = 0;
+      p.punti.forEach(pt=>{
+        if((pt.scaletta||[]).length) return;
+        const s = generaScaletta(pt, freq);
+        if(s.length){ pt.scaletta = s; n++; }
+      });
+      segna(); render();
+      mostraAvviso(n ? `Scaletta pronta per ${n} punt${n===1?"o":"i"}` : "Le scalette ci sono già — usa Rigenera");
+      break;
+    }
+    case "rigenera": {
+      const freq = frequenze(p);
+      const pt = trovaPunto(pid);
+      pt.scaletta = generaScaletta(pt, freq);
+      pt.aperto = true;
+      segna(); render();
+      break;
+    }
+    case "rigenera-tutto": {
+      if(!confirm("Rifare tutte le scalette? Le voci scritte a mano vengono sostituite.")) break;
+      const freq = frequenze(p);
+      p.punti.forEach(pt => pt.scaletta = generaScaletta(pt, freq));
+      segna(); render();
+      break;
+    }
+    case "voce-nuova": {
+      const pt = trovaPunto(pid);
+      pt.scaletta = pt.scaletta || [];
+      pt.scaletta.push({testo:"", url:"", vers:false});
+      segna(); render();
+      const campi = document.querySelectorAll(`.punto[data-p="${pid}"] .voce input`);
+      const ultimo = campi[campi.length-1]; if(ultimo) ultimo.focus();
+      break;
+    }
+    case "voce-togli": {
+      const pt = trovaPunto(pid);
+      pt.scaletta.splice(Number(t.dataset.i), 1);
+      segna(); render();
+      break;
+    }
+
+    case "prec": slide--; renderPulpito(); break;
+    case "succ": slide++; renderPulpito(); break;
+    case "appunti": mostraAppunti = !mostraAppunti; renderPulpito(); break;
+    case "pulpito-modifica": modPulpito = true; renderPulpito(); break;
+    case "pulpito-fine": modPulpito = false; renderPulpito(); break;
+    case "esci-pulpito": vista = "scaletta"; inizioPredica = null; modPulpito = false; render(); break;
+    case "azzera-orologio": inizioPredica = Date.now(); break;
+
+    case "copia-scaletta": chiudiPannello(); copia(scalettaTesto(p)); break;
+    case "copia-appunti": chiudiPannello(); copia(appuntiTesto(p)); break;
+    case "pannello-predica": pannelloPredica(); break;
+    case "pannello-riordina": pannelloRiordina(); break;
+    case "pannello-whatsapp": pannelloWhatsApp(); break;
+    case "chiudi-pannello": chiudiPannello(); break;
+    case "aggiungi-wa": pannelloWhatsApp(); break;
+
+    case "fai-import-wa": {
+      const testo = $("#testo-wa").value;
+      const punti = importaWhatsApp(testo);
+      if(!punti.length){ mostraAvviso("Non ho trovato messaggi da importare"); break; }
+      if(p){
+        p.punti = p.punti.filter(pt => !punteVuoto(pt) || pt.titolo.trim()).concat(punti);
+        if(!p.punti.length) p.punti = punti;
+      }else{
+        const n = nuovaPredica();
+        n.punti = punti;
+        const primoV = punti.map(x=>x.blocchi.find(b=>b.tipo==="versetto")).find(Boolean);
+        if(primoV) n.passo = leggiVersetto(primoV.grezzo).rif;
+        db.prediche.push(n); apertaId = n.id;
+      }
+      chiudiPannello(); vista = "scrivi"; segna(); render();
+      mostraAvviso(punti.length + " punti importati");
+      break;
+    }
+
+    case "duplica-predica": {
+      const n = JSON.parse(JSON.stringify(p));
+      n.id = nuovoId(); n.creata = Date.now();
+      n.titolo = (p.titolo || "Senza titolo") + " (copia)";
+      n.punti.forEach(pt=>{ pt.id = nuovoId(); pt.blocchi.forEach(b=>b.id=nuovoId()); });
+      db.prediche.push(n); apertaId = n.id;
+      chiudiPannello(); segna(); render();
+      break;
+    }
+    case "elimina-predica": {
+      if(!confirm("Eliminare definitivamente questa predicazione?")) break;
+      db.prediche = db.prediche.filter(x=>x.id!==p.id);
+      apertaId = null; vista = "archivio"; chiudiPannello(); segna(); render();
+      break;
+    }
+
+    case "esporta": {
+      chiudiPannello();
+      const blob = new Blob([JSON.stringify(db,null,2)], {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "filo-" + oggiIso() + ".json";
+      a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+      break;
+    }
+    case "importa": {
+      const inp = document.createElement("input");
+      inp.type = "file"; inp.accept = "application/json,.json";
+      inp.onchange = () => {
+        const f = inp.files[0]; if(!f) return;
+        const fr = new FileReader();
+        fr.onload = () => {
+          try{
+            const dati = JSON.parse(fr.result);
+            if(!dati || !Array.isArray(dati.prediche)) throw 0;
+            const noti = new Set(db.prediche.map(x=>x.id));
+            let n = 0;
+            dati.prediche.forEach(x=>{ if(!noti.has(x.id)){ db.prediche.push(x); n++; } });
+            segna(); render();
+            mostraAvviso(n + " predicazioni aggiunte");
+          }catch(err){ mostraAvviso("File non leggibile"); }
+        };
+        fr.readAsText(f);
+      };
+      inp.click();
+      break;
+    }
+  }
+});
+
+document.addEventListener("input", (e)=>{
+  const el = e.target;
+  const campo = el.dataset.campo;
+  if(!campo) return;
+  const p = predicaCorrente();
+  if(campo === "titolo"){
+    p.titolo = el.value; cresci(el);
+    const h = document.querySelector(".testata h1");
+    if(h) h.textContent = el.value || "Senza titolo";
+  }
+  else if(campo === "passo") p.passo = el.value;
+  else if(campo === "data") p.data = el.value;
+  else if(campo === "titolo-punto"){ trovaPunto(el.dataset.p).titolo = el.value; cresci(el); }
+  else if(campo === "nota"){
+    const b = trovaBlocco(el.dataset.p, el.dataset.b);
+    b.testo = el.value; cresci(el);
+    const box = document.getElementById("lk-" + b.id);
+    if(box){
+      const link = (b.testo.match(RE_URL) || []);
+      box.innerHTML = link.map(u=>`<a class="chip-link" href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\//,"").slice(0,46))}</a>`).join("");
+    }
+  }
+  else if(campo === "versetto"){
+    trovaBlocco(el.dataset.p, el.dataset.b).grezzo = el.value; cresci(el);
+  }
+  else if(campo === "voce"){
+    const pt = trovaPunto(el.dataset.p);
+    pt.scaletta[Number(el.dataset.i)].testo = el.value;
+  }
+  segna();
+});
+
+document.addEventListener("change", (e)=>{
+  const el = e.target;
+  if(!el.dataset || el.dataset.campo !== "posizione") return;
+  const p = predicaCorrente(); if(!p) return;
+  const da = p.punti.findIndex(x => x.id === el.dataset.p);
+  const a = Number(el.value);
+  if(da < 0 || a === da || isNaN(a)) return;
+  const [mosso] = p.punti.splice(da, 1);
+  p.punti.splice(a, 0, mosso);
+  segna();
+  const nelPannello = !!el.closest(".velo");
+  render();
+  if(nelPannello){ pannelloRiordina(); }
+  else{
+    const nodo = document.getElementById("p-" + mosso.id);
+    if(nodo) nodo.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+  mostraAvviso("Ora è il punto " + (a+1));
+});
+
+barra.addEventListener("click", (e)=>{
+  const b = e.target.closest("[data-vista]");
+  if(!b) return;
+  vista = b.dataset.vista;
+  if(vista === "pulpito"){ slide = 0; mostraAppunti = false; modPulpito = false; inizioPredica = null; }
+  render();
+  window.scrollTo(0,0);
+});
+
+/* scorrimento con il dito nella modalità predica */
+let xTocco = null, yTocco = null;
+document.addEventListener("touchstart", e=>{
+  if(vista !== "pulpito") return;
+  xTocco = e.touches[0].clientX; yTocco = e.touches[0].clientY;
+}, {passive:true});
+document.addEventListener("touchend", e=>{
+  if(vista !== "pulpito" || xTocco === null) return;
+  const dx = e.changedTouches[0].clientX - xTocco;
+  const dy = e.changedTouches[0].clientY - yTocco;
+  xTocco = null;
+  if(Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx)) return;
+  const p = predicaCorrente(); if(!p) return;
+  if(dx < 0 && slide < p.punti.length-1){ slide++; renderPulpito(); }
+  if(dx > 0 && slide > 0){ slide--; renderPulpito(); }
+}, {passive:true});
+
+document.addEventListener("keydown", e=>{
+  const c = e.target && e.target.dataset ? e.target.dataset.campo : null;
+  if(e.key === "Enter" && (c === "titolo" || c === "titolo-punto")){ e.preventDefault(); e.target.blur(); return; }
+  if(vista !== "pulpito" || (e.target && /TEXTAREA|INPUT/.test(e.target.tagName))) return;
+  const p = predicaCorrente(); if(!p) return;
+  if(e.key === "ArrowRight" && slide < p.punti.length-1){ slide++; renderPulpito(); }
+  if(e.key === "ArrowLeft" && slide > 0){ slide--; renderPulpito(); }
+  if(e.key === "Escape"){ vista = "scaletta"; render(); }
+});
+
+window.addEventListener("resize", cresciTutte);
+
+/* ==========================================================
+   11. AVVIO
+   ========================================================== */
+const SEME = null;
+
+(async function avvia(){
+  const salvato = await Archivio.carica();
+  if(salvato && Array.isArray(salvato.prediche)) db = salvato;
+  if(SEME && !db.semeCaricato && !db.prediche.some(x => x.id === SEME.id)){
+    db.prediche.push(JSON.parse(JSON.stringify(SEME)));
+    db.semeCaricato = true;
+    segna();
+  }
+  db.prediche.forEach(p=>{
+    p.punti = p.punti || [];
+    p.punti.forEach(pt=>{
+      pt.scaletta = pt.scaletta || [];
+      pt.blocchi = pt.blocchi || [];
+      pt.aperto = false;
+      pt.blocchi.forEach(b=>{ if(b.tipo==="nota" && b.modifica === undefined) b.modifica = false; });
+    });
+  });
+  render();
+})();
+</script>
+</body>
+</html>
