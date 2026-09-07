@@ -226,6 +226,72 @@ a{color:var(--nastro)}
 }
 .voce.vers input{color:var(--nastro);font-weight:600}
 .voce .togli{color:#A8AE9F;font:400 20px/1 var(--sans);padding:4px 6px;flex:none}
+/* --- voci della scaletta: tipo, colore, sfondo --- */
+.voce-r{display:flex;align-items:flex-start;gap:11px;margin:0 0 12px;border-radius:9px}
+.voce-r > span{flex:1;min-width:0;word-break:break-word}
+.voce-r .pallino{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.7;margin:.6em 0 0;flex:none}
+.voce-r a{color:inherit;text-decoration:none;border-bottom:1px solid currentColor}
+.t-titolo{font:700 22px/1.25 var(--serif);letter-spacing:-.015em;margin-top:20px}
+.t-titolo:first-of-type{margin-top:4px}
+.t-voce{font:400 18px/1.45 var(--serif)}
+.t-testo{font:400 15.5px/1.6 var(--serif);opacity:.82}
+.grasso{font-weight:700}
+.con-sfondo{padding:10px 13px}
+.pulpito .t-titolo{font-size:29px;line-height:1.18;margin-top:26px}
+.pulpito .t-voce{font-size:24px;line-height:1.4}
+.pulpito .t-testo{font-size:18px}
+
+.c-oro{color:#8A6B1F}      .pulpito .c-oro{color:#E3C87E}
+.c-rosa{color:#8C2F39}     .pulpito .c-rosa{color:#EDA3AA}
+.c-verde{color:#2F6B3C}    .pulpito .c-verde{color:#9AD3A6}
+.c-azzurro{color:#1F4E79}  .pulpito .c-azzurro{color:#9CC5EA}
+.c-viola{color:#5A3E8C}    .pulpito .c-viola{color:#C6AEEA}
+.c-arancio{color:#9C4A16}  .pulpito .c-arancio{color:#F0B183}
+
+.s-oro{background:rgba(201,169,78,.17)}
+.s-rosa{background:rgba(178,68,80,.16)}
+.s-verde{background:rgba(76,154,99,.16)}
+.s-azzurro{background:rgba(74,130,196,.16)}
+.s-viola{background:rgba(138,102,200,.16)}
+.s-arancio{background:rgba(210,118,47,.17)}
+
+.campo-voce{
+  width:100%;display:block;border:1px solid var(--bordo);border-radius:9px;
+  padding:10px 12px;background:#fff;font:400 17px/1.45 var(--serif);
+  resize:none;overflow:hidden;
+}
+.ctrl-voce{display:flex;gap:6px;margin:5px 0 16px;flex-wrap:wrap}
+.cbtn{
+  font:500 12.5px/1 var(--sans);padding:9px 11px;border-radius:8px;
+  border:1px solid var(--bordo);background:var(--carta-alta);color:var(--tenue);
+}
+.cbtn:disabled{opacity:.32}
+.cbtn.rosso{color:var(--nastro)}
+.cbtn.forte{color:var(--inchiostro);border-color:var(--filo)}
+.pulpito .cbtn{border-color:rgba(217,196,138,.32);background:rgba(255,255,255,.04);color:#BFC7BB}
+.pulpito .cbtn.rosso{color:#E9A7AE}
+.pulpito .cbtn.forte{color:#D9C48A;border-color:rgba(217,196,138,.6)}
+
+/* --- pannello dello stile --- */
+.gruppo{margin:0 0 18px}
+.etich{display:block;font:600 11.5px/1 var(--sans);color:var(--tenue);
+  letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px}
+.segm{display:flex;gap:6px}
+.segm button{
+  flex:1;padding:12px 6px;border-radius:9px;border:1px solid var(--bordo);
+  background:var(--carta-alta);font:500 14px/1 var(--sans);color:var(--tenue);
+}
+.segm button.on{border-color:var(--filo);background:#fff;color:var(--inchiostro);box-shadow:inset 0 0 0 1px var(--filo)}
+.tavolozza{display:flex;gap:9px;flex-wrap:wrap}
+.pastello{width:40px;height:40px;border-radius:50%;border:2px solid transparent;position:relative}
+.pastello.on{border-color:var(--inchiostro)}
+.pastello.def{background:var(--carta);box-shadow:inset 0 0 0 1px var(--tenue)}
+.pastello.def::after{content:'⊘';position:absolute;inset:0;display:grid;place-items:center;color:var(--tenue);font-size:15px}
+.sw-oro{background:#C9A94E} .sw-rosa{background:#B24450} .sw-verde{background:#4C9A63}
+.sw-azzurro{background:#4A82C4} .sw-viola{background:#8A66C8} .sw-arancio{background:#D2762F}
+.tavolozza.tenue .pastello{opacity:.55}
+.tavolozza.tenue .pastello.on{opacity:1}
+
 .voce-letta{display:flex;align-items:flex-start;gap:10px;margin:9px 0;font:400 18px/1.45 var(--serif)}
 .voce-letta.vers{color:var(--nastro);font-weight:600}
 .voce-letta a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(140,47,57,.35)}
@@ -270,18 +336,15 @@ a{color:var(--nastro)}
   font:400 18px/1.6 var(--serif);color:#BFC7BB;white-space:pre-wrap;
 }
 .pulpito .appunti .r{color:#E9A7AE;font-family:var(--sans);font-size:15px;font-weight:600;display:block;margin:14px 0 4px}
-.pulpito textarea,.pulpito .voce-edit input{
+.pulpito textarea{
   width:100%;background:rgba(255,255,255,.05);color:#F3F3EA;
   border:1px solid rgba(217,196,138,.34);border-radius:10px;padding:11px 13px;
   resize:none;overflow:hidden;display:block;
 }
 .pulpito .titolo-edit{font:700 27px/1.25 var(--serif);letter-spacing:-.02em}
-.pulpito .voce-edit{display:flex;gap:8px;align-items:flex-start;margin:0 0 10px}
-.pulpito .voce-edit input{font:400 21px/1.4 var(--serif)}
-.pulpito .voce-edit .togli{
-  flex:none;width:auto;color:#8C9789;font:400 22px/1 var(--sans);padding:9px 8px;background:none;border:none;
-}
 .pulpito .blocco-edit{margin:0 0 12px}
+.pulpito .campo-voce{background:rgba(255,255,255,.05);color:#F3F3EA;border-color:rgba(217,196,138,.34);font:400 21px/1.4 var(--serif)}
+.blocco-voce{margin:0 0 4px}
 .pulpito .blocco-edit textarea{font:400 17px/1.55 var(--serif)}
 .pulpito .etichetta{
   display:block;font:600 12px/1 var(--sans);color:#D9C48A;margin:26px 0 10px;
@@ -639,7 +702,10 @@ function generaScaletta(punto, freq){
     const k = v.testo.toLowerCase().replace(/\s+/g," ");
     if(!k || viste.has(k)) return false;
     viste.add(k); return true;
-  }).slice(0,9).map(v=>({ testo:v.testo, url:v.url||"", vers:!!v.vers }));
+  }).slice(0,9).map(v=>({
+    testo:v.testo, url:v.url||"", vers:!!v.vers,
+    tipo:"voce", colore: v.vers ? "rosa" : "", sfondo:"", grassetto:false
+  }));
 }
 
 function frequenze(predica){
@@ -722,7 +788,10 @@ function scalettaTesto(p){
   r.push("");
   p.punti.forEach((pt,i)=>{
     r.push((i+1) + ". " + (pt.titolo || "—"));
-    (pt.scaletta||[]).forEach(v => r.push("   • " + v.testo + (v.url ? "  " + v.url : "")));
+    (pt.scaletta||[]).forEach(v => {
+      const seg = v.tipo === "titolo" ? "   " : (v.tipo === "testo" ? "     " : "   • ");
+      r.push(seg + v.testo + (v.url ? "  " + v.url : ""));
+    });
     r.push("");
   });
   return r.join("\n").trim();
@@ -866,6 +935,52 @@ function puntoHtml(pt, i, tot){
   </article>`;
 }
 
+const COLORI = [
+  {id:"",        nome:"Predefinito"},
+  {id:"oro",     nome:"Oro"},
+  {id:"rosa",    nome:"Rosso"},
+  {id:"verde",   nome:"Verde"},
+  {id:"azzurro", nome:"Azzurro"},
+  {id:"viola",   nome:"Viola"},
+  {id:"arancio", nome:"Arancio"}
+];
+
+function nuovaVoce(){
+  return { testo:"", url:"", vers:false, tipo:"voce", colore:"", sfondo:"", grassetto:false };
+}
+function sistemaVoce(v){
+  if(!v.tipo) v.tipo = "voce";
+  if(v.colore === undefined) v.colore = v.vers ? "rosa" : "";
+  if(v.sfondo === undefined) v.sfondo = "";
+  if(v.grassetto === undefined) v.grassetto = false;
+  return v;
+}
+function classiVoce(v){
+  return ["voce-r", "t-" + (v.tipo||"voce"),
+          v.colore ? "c-"+v.colore : "",
+          v.sfondo ? "s-"+v.sfondo+" con-sfondo" : "",
+          v.grassetto ? "grasso" : ""].filter(Boolean).join(" ");
+}
+function voceLetta(v){
+  const dentro = v.url
+    ? `<a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.testo)}</a>`
+    : (esc(v.testo) || '<i class="vuota">voce vuota</i>');
+  return `<div class="${classiVoce(v)}">${(v.tipo||"voce")==="voce" ? '<i class="pallino"></i>' : ""}<span>${dentro}</span></div>`;
+}
+function voceScritta(pid, k, tot, v){
+  return `<div class="blocco-voce">
+    <textarea class="auto campo-voce" rows="1" data-campo="voce" data-p="${pid}" data-i="${k}"
+      placeholder="parola chiave, titolo o versetto incollato da YouVersion">${esc(v.testo)}</textarea>
+    <div class="ctrl-voce">
+      <button class="cbtn" data-az="voce-su" data-p="${pid}" data-i="${k}" ${k===0?"disabled":""}>↑</button>
+      <button class="cbtn" data-az="voce-giu" data-p="${pid}" data-i="${k}" ${k===tot-1?"disabled":""}>↓</button>
+      <button class="cbtn forte" data-az="voce-stile" data-p="${pid}" data-i="${k}">Stile</button>
+      ${v.url ? `<a class="cbtn" href="${esc(v.url)}" target="_blank" rel="noopener">Apri</a>` : ""}
+      <button class="cbtn rosso" data-az="voce-togli" data-p="${pid}" data-i="${k}">Togli</button>
+    </div>
+  </div>`;
+}
+
 function selettorePosizione(pid, i, tot){
   let opt = "";
   for(let k=0;k<tot;k++) opt += `<option value="${k}" ${k===i?"selected":""}>${k+1}°</option>`;
@@ -934,19 +1049,8 @@ function renderScaletta(){
             <textarea class="titolo-punto auto" rows="1" data-campo="titolo-punto" data-p="${pt.id}" placeholder="Titolo del punto">${esc(pt.titolo)}</textarea>
             ${(pt.scaletta||[]).length ? "" : `<p class="nota-punto-scaletta">${punteVuoto(pt) ? "Nessun appunto in questo punto." : "Ancora da generare."}</p>`}
             ${pt.aperto
-              ? (pt.scaletta||[]).map((v,k)=>`
-                  <div class="voce ${v.vers?"vers":""}">
-                    <i class="puntino"></i>
-                    <input data-campo="voce" data-p="${pt.id}" data-i="${k}" value="${esc(v.testo)}" placeholder="parola chiave">
-                    <button class="togli" data-az="voce-togli" data-p="${pt.id}" data-i="${k}" aria-label="Togli">×</button>
-                  </div>`).join("")
-              : (pt.scaletta||[]).map(v=>`
-                  <div class="voce-letta ${v.vers?"vers":""}">
-                    <i class="puntino"></i>
-                    <span>${v.url
-                      ? `<a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.testo)}</a>`
-                      : (esc(v.testo) || '<i class="vuota">voce vuota</i>')}</span>
-                  </div>`).join("")}
+              ? (pt.scaletta||[]).map((v,k)=>voceScritta(pt.id, k, pt.scaletta.length, v)).join("")
+              : (pt.scaletta||[]).map(v=>voceLetta(v)).join("")}
             ${pt.aperto
               ? `<div class="aggiungi">
                    <button class="minuto" data-az="voce-nuova" data-p="${pt.id}">+ Voce</button>
@@ -986,18 +1090,11 @@ function renderPulpito(){
   ).join("");
 
   const listaVoci = voci.length
-    ? `<ul>${voci.map(v=>`
-        <li class="${v.vers?"vers":""}">${v.url
-          ? `<a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.testo)}</a>`
-          : esc(v.testo)}</li>`).join("")}</ul>`
+    ? `<div class="elenco-voci">${voci.map(v=>voceLetta(v)).join("")}</div>`
     : `<p style="color:#8C9789;font-size:18px;margin-top:24px">Nessuna parola chiave. Tocca Modifica qui sopra per scriverle o generarle.</p>`;
 
   const vociScritte = `
-    ${voci.map((v,k)=>`
-      <div class="voce-edit">
-        <input data-campo="voce" data-p="${pt.id}" data-i="${k}" value="${esc(v.testo)}" placeholder="parola chiave">
-        <button class="togli" data-az="voce-togli" data-p="${pt.id}" data-i="${k}" aria-label="Togli">×</button>
-      </div>`).join("")}
+    ${voci.map((v,k)=>voceScritta(pt.id, k, voci.length, v)).join("")}
     <div class="fila-edit">
       <button class="oro-scuro" data-az="voce-nuova" data-p="${pt.id}">+ Voce</button>
       <button class="oro-scuro" data-az="rigenera" data-p="${pt.id}">${voci.length?"Rigenera":"Genera dagli appunti"}</button>
@@ -1067,6 +1164,53 @@ function pannelloWhatsApp(){
       <button class="btn chiaro" data-az="chiudi-pannello">Annulla</button>
       <button class="btn oro" data-az="fai-import-wa">Crea predicazione</button>
     </div>`);
+}
+
+function pannelloStile(pid, i){
+  const pt = trovaPunto(pid);
+  if(!pt || !pt.scaletta[i]) return;
+  const v = sistemaVoce(pt.scaletta[i]);
+  const tipi = [["titolo","Titolo"],["voce","Voce"],["testo","Testo"]];
+  apriPannello(`
+    <h3>Stile della voce</h3>
+    <p>${esc((v.testo||"").slice(0,80)) || "voce vuota"}</p>
+
+    <div class="gruppo">
+      <span class="etich">Che cos'è</span>
+      <div class="segm">
+        ${tipi.map(([id,n])=>`<button class="${(v.tipo||"voce")===id?"on":""}" data-az="set-tipo" data-p="${pid}" data-i="${i}" data-v="${id}">${n}</button>`).join("")}
+      </div>
+    </div>
+
+    <div class="gruppo">
+      <span class="etich">Colore del carattere</span>
+      <div class="tavolozza">
+        ${COLORI.map(c=>`<button class="pastello ${c.id?"sw-"+c.id:"def"} ${(v.colore||"")===c.id?"on":""}" data-az="set-colore" data-p="${pid}" data-i="${i}" data-v="${c.id}" aria-label="${c.nome}"></button>`).join("")}
+      </div>
+    </div>
+
+    <div class="gruppo">
+      <span class="etich">Colore di sfondo</span>
+      <div class="tavolozza tenue">
+        ${COLORI.map(c=>`<button class="pastello ${c.id?"sw-"+c.id:"def"} ${(v.sfondo||"")===c.id?"on":""}" data-az="set-sfondo" data-p="${pid}" data-i="${i}" data-v="${c.id}" aria-label="${c.nome}"></button>`).join("")}
+      </div>
+    </div>
+
+    <div class="gruppo">
+      <span class="etich">Peso</span>
+      <div class="segm">
+        <button class="${v.grassetto?"":"on"}" data-az="set-grassetto" data-p="${pid}" data-i="${i}" data-v="0">Normale</button>
+        <button class="${v.grassetto?"on":""}" data-az="set-grassetto" data-p="${pid}" data-i="${i}" data-v="1"><b>Grassetto</b></button>
+      </div>
+    </div>
+
+    <div class="gruppo">
+      <span class="etich">Link al versetto</span>
+      <input class="campo-meta" style="width:100%" data-campo="voce-url" data-p="${pid}" data-i="${i}"
+        value="${esc(v.url||"")}" placeholder="https://bible.com/...">
+    </div>
+
+    <div class="fila"><button class="btn oro" data-az="chiudi-pannello">Fatto</button></div>`);
 }
 
 function pannelloRiordina(){
@@ -1226,10 +1370,31 @@ document.addEventListener("click", async (e)=>{
     case "voce-nuova": {
       const pt = trovaPunto(pid);
       pt.scaletta = pt.scaletta || [];
-      pt.scaletta.push({testo:"", url:"", vers:false});
+      pt.scaletta.push(nuovaVoce());
       segna(); render();
       const campi = document.querySelectorAll(`.punto[data-p="${pid}"] .voce input`);
       const ultimo = campi[campi.length-1]; if(ultimo) ultimo.focus();
+      break;
+    }
+    case "voce-stile": pannelloStile(pid, Number(t.dataset.i)); break;
+    case "voce-su": case "voce-giu": {
+      const pt = trovaPunto(pid);
+      const k = Number(t.dataset.i);
+      const j = az === "voce-su" ? k-1 : k+1;
+      if(j < 0 || j >= pt.scaletta.length) break;
+      [pt.scaletta[k], pt.scaletta[j]] = [pt.scaletta[j], pt.scaletta[k]];
+      segna(); render();
+      break;
+    }
+    case "set-tipo": case "set-colore": case "set-sfondo": case "set-grassetto": {
+      const pt = trovaPunto(pid);
+      const i2 = Number(t.dataset.i);
+      const v = sistemaVoce(pt.scaletta[i2]);
+      if(az === "set-tipo") v.tipo = t.dataset.v;
+      if(az === "set-colore") v.colore = t.dataset.v;
+      if(az === "set-sfondo") v.sfondo = t.dataset.v;
+      if(az === "set-grassetto") v.grassetto = t.dataset.v === "1";
+      segna(); render(); pannelloStile(pid, i2);
       break;
     }
     case "voce-togli": {
@@ -1352,9 +1517,38 @@ document.addEventListener("input", (e)=>{
   }
   else if(campo === "voce"){
     const pt = trovaPunto(el.dataset.p);
-    pt.scaletta[Number(el.dataset.i)].testo = el.value;
+    sistemaVoce(pt.scaletta[Number(el.dataset.i)]).testo = el.value;
+    cresci(el);
+  }
+  else if(campo === "voce-url"){
+    const pt = trovaPunto(el.dataset.p);
+    const v = sistemaVoce(pt.scaletta[Number(el.dataset.i)]);
+    v.url = el.value.trim();
+    v.vers = !!v.url;
   }
   segna();
+});
+
+document.addEventListener("focusout", (e)=>{
+  const el = e.target;
+  if(!el.dataset || el.dataset.campo !== "voce") return;
+  const pt = trovaPunto(el.dataset.p); if(!pt) return;
+  const v = pt.scaletta[Number(el.dataset.i)];
+  if(!v || !HA_URL.test(v.testo || "")) return;
+  const letto = leggiVersetto(v.testo);
+  if(!letto.url) return;
+  v.url = letto.url;
+  v.vers = true;
+  v.testo = letto.rif || v.testo.replace(RE_URL, "").trim();
+  if(!v.colore) v.colore = "rosa";
+  segna(); render();
+  mostraAvviso("Versetto riconosciuto, ora è cliccabile");
+});
+
+document.addEventListener("focusin", (e)=>{
+  const el = e.target;
+  if(vista !== "pulpito" || !el.dataset || !el.dataset.campo) return;
+  setTimeout(()=>{ try{ el.scrollIntoView({block:"center", behavior:"smooth"}); }catch(err){} }, 340);
 });
 
 document.addEventListener("change", (e)=>{
@@ -1435,6 +1629,7 @@ const SEME = null;
       pt.blocchi = pt.blocchi || [];
       pt.aperto = false;
       pt.blocchi.forEach(b=>{ if(b.tipo==="nota" && b.modifica === undefined) b.modifica = false; });
+      pt.scaletta.forEach(sistemaVoce);
     });
   });
   render();
